@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Image Classifier</title>
+  <style>
+    body { font-family: Arial; padding: 2em; text-align: center; }
+    input[type=file] { margin: 1em 0; }
+    img { max-width: 300px; margin-top: 1em; }
+    .result { margin-top: 1em; font-size: 1.2em; }
+  </style>
+</head>
+<body>
+  <h1>EfficientNet Image Classifier</h1>
+
+  <form id="upload-form" enctype="multipart/form-data">
+    <input type="file" id="image" name="file" accept="image/*" required><br>
+    <button type="submit">Predict</button>
+  </form>
+
+  <img id="preview" src="#" alt="Image Preview" style="display:none;">
+  <div class="result" id="result"></div>
+
+  <script>
+    const form = document.getElementById('upload-form');
+    const preview = document.getElementById('preview');
+    const result = document.getElementById('result');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const fileInput = document.getElementById('image');
+      const file = fileInput.files[0];
+      if (!file) return;
+
+      const formData = new FormData();
+      formData.append('file', file);
+
+      // Preview image
+      preview.src = URL.createObjectURL(file);
+      preview.style.display = 'block';
+
+      result.innerHTML = 'Predicting...';
+
+      const res = await fetch('/predict', {
+        method: 'POST',
+        body: formData
+      });
+
+      const data = await res.json();
+      console.log(data)
+
+      if (res.ok) {
+        result.innerHTML = `Prediction: <strong>${data.predicted_class}</strong><br>Confidence: <strong>${(data.confidence * 100).toFixed(2)}%</strong>`;
+      } else {
+        result.innerHTML = `<span style="color:red;">Error: ${data.error}</span>`;
+      }
+    });
+  </script>
+</body>
+</html>
