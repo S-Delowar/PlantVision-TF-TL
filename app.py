@@ -1,6 +1,8 @@
 import sys
+import tensorflow as tf
 from flask import Flask, render_template, request, jsonify
 
+from config import CLASS_NAMES, MODEL_PATH
 from pipelines.prediction import make_prediction
 from pipelines.preprocess import preprocess_image
 from utils.exception import CustomException
@@ -8,6 +10,16 @@ from utils.exception import CustomException
 
 
 app = Flask(__name__)
+
+
+
+# Loading the model and class names
+if not MODEL_PATH.exists():
+    print(f"Error: Model file not found at {MODEL_PATH}")
+else:
+    tf_model = tf.keras.models.load_model(MODEL_PATH)
+
+class_names = CLASS_NAMES
 
 
 @app.route("/")
@@ -26,9 +38,9 @@ def predict():
         return jsonify({'error': 'Unsupported file type'}), 400
     
     try:
-        img = request.files["file"].read()
-        preprocessed_image = preprocess_image(img)
-        predicted_class, confidence = make_prediction(preprocessed_image)
+        img_bytes = request.files["file"].read()
+        preprocessed_image_arr = preprocess_image(img_bytes)
+        predicted_class, confidence = make_prediction(preprocessed_image_arr, tf_model, class_names)
     except Exception as e:
         return jsonify({'error': CustomException(e, sys)})    
     
