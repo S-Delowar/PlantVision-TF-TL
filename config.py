@@ -1,7 +1,8 @@
 from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent
-MODEL_PATH = BASE_DIR / "model" / "best_102_flowes_model_fine_tuned_2.keras"
+MODEL_PATH = BASE_DIR / "model" / "best_fine_tuned_model.keras"
+TFLITE_MODEL_PATH = BASE_DIR / "model" / "best_fine_tuned_model.tflite"
 
 IMAGE_SIZE = (300, 300)
 

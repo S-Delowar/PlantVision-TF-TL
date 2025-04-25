@@ -7,7 +7,7 @@ from utils.logger import logging
 
 
 
-def make_prediction(preprocessed_img_arr, model, class_names):
+def predict_with_keras_model(preprocessed_img_arr, model, class_names):
     """Make prediction on preprocessed image array
 
     Args:
@@ -25,8 +25,31 @@ def make_prediction(preprocessed_img_arr, model, class_names):
         # logging.info(f"Class Names :{class_names}")
         pred_class = class_names[np.argmax(pred_prob)]
         confidence = float(np.max(pred_prob))
-        # logging.info(f"Predicted Class--------------------{pred_class}, -----confidence: {confidence}")
+        logging.info(f"Predicted Class: {pred_class}, Confidence: {confidence}")
         return pred_class, confidence
     except Exception as e:
         raise CustomException(e, sys)
+    
+    
+def predict_with_tflite_model(preprocessed_img_arr, interpreter, class_names):
+    try:
+        input_img_arr = tf.expand_dims(preprocessed_img_arr, axis=0)
+        
+        logging.info("Get TFLite input output details")
+        input_details = interpreter.get_input_details()
+        output_details = interpreter.get_output_details()
+        logging.info("Model input shape:", input_details[0]['shape'])
+
+        logging.info("Run inference")
+        interpreter.set_tensor(input_details[0]['index'], input_img_arr)
+        interpreter.invoke()
+        pred_prob = interpreter.get_tensor(output_details[0]['index'])
+        pred_class = class_names[np.argmax(pred_prob)]
+        confidence = float(np.max(pred_prob))
+        logging.info(f"Predicted Class: {pred_class}, Confidence: {confidence}")
+
+        return pred_class, confidence
+    except Exception as e:
+        raise CustomException(sys, e)
+        
     
