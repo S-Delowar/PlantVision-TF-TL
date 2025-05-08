@@ -1,7 +1,8 @@
-# Flower Classification App using Transfer Learning with EfficientNetB3
+# Plant Classification App using Transfer Learning with EfficientNetB3
 
 This project demonstrates the use of Transfer Learning to classify flower species using the Oxford Flowers 102 dataset. By leveraging powerful pre-trained deep learning models (specifically EfficientNet), the project fine-tunes and evaluates classification performance using various training strategies. It also includes conversion to TFLite format to deploy with Flask API endpoint for predictions.
 
+**Live on Render:**  [https://plantvision-tf-tl.onrender.com/](https://plantvision-tf-tl.onrender.com/)
 
 ## Tech Stack
 - Language: Python
@@ -70,12 +71,7 @@ Three training strategies were applied:
 ## 🔄 Converting to TFLite Version
 
 The trained model is converted to TensorFlow Lite format to support edge devices and future mobile deployment.
-
-```python
-converter = tf.lite.TFLiteConverter.from_saved_model("path_to_saved_model")
-tflite_model = converter.convert()
-```
-
+* Using TFLiteConverter from Tensorflow for the conversion
 * TFLite model is significantly smaller and optimized for inference speed.
 
 ---
@@ -91,3 +87,17 @@ A lightweight Flask API is implemented to serve predictions from the TFLite mode
 * Uses the TFLite Interpreter for prediction
 * Returns class name with highest probability
 
+
+## Dockerization & Deployment
+To ensure consistency across environments and simplify deployment, the Flask API is containerized using Docker.
+  ### Dockerfile
+    - Uses a lightweight Python base image (python:3.10-slim)
+    - Installs all dependencies from requirements.txt
+    - Sets up the working directory and environment variables
+    - Copies source code into the container
+    - Uses Gunicorn to run the Flask app on port 5000
+  ### Deployment
+    - Deploy the dockerized app to Render (Uses free tier)
+    - Render can automatically build and deploy your app by detecting the Dockerfile in your GitHub repository.
+
+  ** Live Prediction on Render:**  [https://plantvision-tf-tl.onrender.com](https://plantvision-tf-tl.onrender.com/)
