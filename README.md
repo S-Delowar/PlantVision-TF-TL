@@ -4,6 +4,8 @@ This project demonstrates the use of Transfer Learning to classify flower specie
 
 **Live on Render:**  [https://plantvision-tf-tl.onrender.com/](https://plantvision-tf-tl.onrender.com/)
 
+---
+
 ## Tech Stack
 - Language: Python
 - Deep Learning Framework: TensorFlow / Keras
@@ -12,7 +14,8 @@ This project demonstrates the use of Transfer Learning to classify flower specie
 - Utilities: NumPy, Matplotlib, TensorFlow Datasets (TFDS)
 - Model Conversion: TensorFlow Lite (TFLite)
 - Deployment: Flask API
-  
+
+  ---
 
 # Dataset and Data Preprocessing
 
@@ -27,9 +30,9 @@ This project demonstrates the use of Transfer Learning to classify flower specie
 
 ---
 
-## 📈 Model Training Strategy
+## Model Training Strategy
 
-### 🔢 Feature Extractor Model Architecture
+### Feature Extractor Model Architecture
 
 * **Base Model:** EfficientNetB3 from `tf.keras.applications`
 * **Strategy:**
@@ -49,7 +52,7 @@ Three training strategies were applied:
 | Fine-Tuning (1st)  | Unfreeze last 30 layers (trainable = -30:) | Last 30           | **1e-6**      | 74.6%      | 68.7%     | 62.9%     | 1.56     | 1.75      |
 | Fine-Tuning (2nd)  | Unfreeze last 10 + Dropout & reinit Dense  | Last 10 + Dropout | **1e-3**      | **98.5%**  | **84.9%** | **83.4%** | 0.60     | 0.61      |
 
-#### 🔍 Key Observations:
+#### Key Observations:
 
 * **Initial Fine-Tuning Attempt (1e-6):**
 
@@ -67,8 +70,9 @@ Three training strategies were applied:
   * Test accuracy also improved sharply to **83.4%**, validating the changes.
   * This shows the importance of proper learning rate and controlled unfreezing.
 
+---
 
-## 🔄 Converting to TFLite Version
+## Converting to TFLite Version
 
 The trained model is converted to TensorFlow Lite format to support edge devices and future mobile deployment.
 * Using TFLiteConverter from Tensorflow for the conversion
@@ -77,7 +81,7 @@ The trained model is converted to TensorFlow Lite format to support edge devices
 ---
 
 
-## 🔍 Prediction Endpoint
+## Prediction Endpoint
 
 A lightweight Flask API is implemented to serve predictions from the TFLite model.
 
@@ -87,17 +91,20 @@ A lightweight Flask API is implemented to serve predictions from the TFLite mode
 * Uses the TFLite Interpreter for prediction
 * Returns class name with highest probability
 
+---
 
 ## Dockerization & Deployment
 To ensure consistency across environments and simplify deployment, the Flask API is containerized using Docker.
-  ### Dockerfile
+  - Dockerfile
     - Uses a lightweight Python base image (python:3.10-slim)
     - Installs all dependencies from requirements.txt
     - Sets up the working directory and environment variables
     - Copies source code into the container
     - Uses Gunicorn to run the Flask app on port 5000
-  ### Deployment
+  - Deployment
     - Deploy the dockerized app to Render (Uses free tier)
     - Render can automatically build and deploy your app by detecting the Dockerfile in your GitHub repository.
 
-  ** Live Prediction on Render:**  [https://plantvision-tf-tl.onrender.com](https://plantvision-tf-tl.onrender.com/)
+  **Live Prediction on Render:**  [https://plantvision-tf-tl.onrender.com](https://plantvision-tf-tl.onrender.com/)
+
+---
